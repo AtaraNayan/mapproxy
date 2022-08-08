@@ -1,0 +1,34 @@
+# ---------------------------------------
+# MapProxy example seeding configuration.
+# ---------------------------------------
+#
+# This is a minimal MapProxy seeding configuration.
+# See full_seed_example.yaml and the documentation for more options.
+#
+
+seeds:
+  myseed1:
+    caches: [osm_cache]
+    grids: [webmercator]
+    # grids: []
+    # coverages: []
+    # levels:
+    #   to: 10
+    # refresh_before:
+    #   time: 2013-10-10T12:35:00
+
+cleanups:
+  myclean1:
+    caches: [osm_cache]
+    grids: [webmercator]
+    remove_all: true 
+    levels:
+      from: 0
+      to: 20
+
+coverages:
+  # changed_area:
+  #   # example with PostGIS query
+  #   datasource: "redis: dbname='21' host='20.96.250.77:6379' user='' password='infosense12'"
+  #   where: "select * from last_changes"
+  #   srs: 'EPSG:4326'

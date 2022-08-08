@@ -1,0 +1,144 @@
+# -------------------------------
+# MapProxy example configuration.
+# -------------------------------
+#
+# This is a minimal MapProxy configuration.
+# See full_example.yaml and the documentation for more options.
+#
+
+# Starts the following services:
+# Demo:
+#     http://localhost:8080/demo
+# WMS:
+#     capabilities: http://localhost:8080/service?REQUEST=GetCapabilities
+# WMTS:
+#     capabilities: http://localhost:8080/wmts/1.0.0/WMTSCapabilities.xml
+#     first tile: http://localhost:8080/wmts/osm/webmercator/0/0/0.png
+# Tile service (compatible with OSM/etc.)
+#     first tile: http://localhost:8080/tiles/osm/webmercator/0/0/0.png
+# TMS:
+#     note: TMS is not compatible with OSM/Google Maps/etc.
+#     first tile: http://localhost:8080/tms/1.0.0/osm/webmercator/0/0/0.png
+# KML:
+#     initial doc: http://localhost:8080/kml/osm/webmercator
+
+services:
+  demo:
+  tms:
+    use_grid_names: true
+    # origin for /tiles service
+    origin: 'nw'
+  kml:
+    use_grid_names: true
+  wmts:
+    restful: true
+    restful_template: '/{Layer}/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.{Format}'
+    kvp: true
+  wms:
+    versions: ['1.1.1']
+    srs: ['EPSG:3857']
+    bbox_srs: ['EPSG:3857']
+    image_formats: ['image/jpeg', 'image/png']
+    md:
+      title: MapProxy WMS Proxy
+      abstract: This is a minimal MapProxy example.
+
+layers:
+  - name: mapproxy
+    title: Omniscale OSM WMS - osm.omniscale.net
+    sources: [osm_cache]
+  - name: geomesa_wms
+    title: Main:gdelt-quickstart
+    sources: [geomesa_wms]
+  
+
+caches:
+  osm_cache:
+    grids: [webmercator]
+    sources: [geomesa_wms]
+    # cache: 
+    #   type: file
+    #   directory_layout: zz/xxxx/yyyy.format
+    #   use_grid_names: 
+    #   directory: 
+    #   tile_lock_dir: 
+    cache:
+      type: redis
+      host: 52.226.203.98
+      port: 6379
+      prefix: Main:gdelt-quickstart
+      pwd: admin123
+      db: 0
+      default_ttl: 120
+      patten: zxy
+      # directory: C:\Users\YashModi\mymapproxy\cache_data\osm_cache_EPSG4326
+    #   host: 20.96.250.77
+    #   port: 6379
+    #   db: 21
+      #  prefix: OsmData
+    #   default_tt1: 600
+  # geomesa_cache: 
+  #   grids: [res_grid]
+  #   sources: []
+
+sources:
+  osm_wms:
+    type: wms
+    req:
+      url: https://maps.omniscale.net/v2/demo/style.default/service?
+      layers: mapproxy
+    wms_opts:
+      featureinfo: True
+    coverage:
+      bbox: [-80.51942, 38.45105, -71.78767, 45.0108]
+      srs: 'EPSG:3857'
+  geomesa_wms:
+    type: wms
+    req:
+      url: https://gmgeoserver.isgapps.com/geoserver/Main/wms?
+      layers: Main:gdelt-quickstart
+      grid: webmercator
+      transparent: True
+    wms_opts:
+      featureinfo: True
+    coverage:
+      bbox: [-80.51942, 38.45105, -71.78767, 45.0108]
+      srs: 'EPSG:3857'
+
+grids:
+  webmercator:
+    base: GLOBAL_WEBMERCATOR
+    origin: ul
+    srs: 'EPSG:3857'
+    bbox: [-80.51942, 38.45105, -71.78767, 45.0108]
+    origin: nw
+    res: [
+         #  res            level     scale @90.7 DPI
+           28.0000000000, #  0      100000.00000000
+           14.0000000000, #  1       50000.00000000
+            7.0000000000, #  2       25000.00000000
+            3.5000000000, #  3       12500.00000000
+            1.7500000000, #  4        6250.00000000
+            0.8750000000, #  5        3125.00000000
+            0.4375000000, #  6        1562.50000000
+            0.2187500000, #  7         781.25000000
+            0.1093750000, #  8         390.62500000
+            0.0546875000, #  9         195.31250000
+            0.0273437500, # 10          97.65625000
+            0.0136718750, # 11          48.82812500
+            0.0068359375, # 12          24.41406250
+            0.0034179687, # 13          12.20703125
+            0.0017089844, # 14           6.10351562
+            0.0008544922, # 15           3.05175781
+            0.0004272461, # 16           1.52587891
+            0.0002136230, # 17           0.76293945
+            0.0001068115, # 18           0.38146973
+            0.0000534058, # 19           0.19073486
+    ]
+
+
+globals:
+  http:
+    client_timeout: 10
+  image:
+    resampling_method: bicubic
