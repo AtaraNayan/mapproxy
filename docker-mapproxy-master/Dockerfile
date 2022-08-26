@@ -31,7 +31,7 @@ RUN pip3 --disable-pip-version-check install Shapely /mapproxy-master.zip Pillow
 # RUN apt-get install unzip
 
 RUN mkdir -p /mapproxy
-COPY /mapproxy_configuration/* /mapproxy
+COPY /mapproxy_configuration/* /mapproxy/
 # RUN pip install mapproxy-master.zip
 # COPY /mymapproxy.zip /mymapproxy.zip
 
