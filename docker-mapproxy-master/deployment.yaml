@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mapproxy
+  labels:
+    app: mapproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mapproxy
+  template:
+    metadata:
+      labels:
+        app: mapproxy
+    spec:
+      containers:
+      - name: mp
+        image: 7984193232/mapproxy:v9
+        ports:
+        - containerPort: 8080
