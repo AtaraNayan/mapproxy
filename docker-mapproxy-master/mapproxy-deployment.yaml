@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mapproxy
+  name: mapproxy
+  namespace: isgbasemap
+spec:
+  selector:
+    matchLabels:
+      app: mapproxy
+  template:
+    metadata:
+      labels:
+        app: mapproxy
+    spec:
+      containers:
+      - image: 7984193232/mapproxy:v11
+        name: mapproxy
+
+---
+
+
+
+# service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mapproxy-service
+  labels:
+    app: mapproxy
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: mapproxy
