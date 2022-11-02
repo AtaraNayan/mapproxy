@@ -4,7 +4,7 @@ metadata:
   labels:
     app: mapproxy
   name: mapproxy
-  namespace: isgbasemap
+  namespace: mapproxy
 spec:
   selector:
     matchLabels:
